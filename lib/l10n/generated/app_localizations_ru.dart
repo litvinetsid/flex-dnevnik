@@ -1588,4 +1588,128 @@ class AppLocalizationsRu extends AppLocalizations {
   String previousPerformance(String date, String sets) {
     return 'Ранее $date · $sets';
   }
+
+  @override
+  String get kcalLabel => 'Калории (ккал)';
+
+  @override
+  String get proteinLabel => 'Белки (г)';
+
+  @override
+  String get fatLabel => 'Жиры (г)';
+
+  @override
+  String get carbsLabel => 'Углеводы (г)';
+
+  @override
+  String kcalValue(String value) {
+    return '$value ккал';
+  }
+
+  @override
+  String macrosShort(String protein, String fat, String carbs) {
+    return 'Б $protein · Ж $fat · У $carbs';
+  }
+
+  @override
+  String get exportWorkoutAnalysis => 'Тренировки для анализа (CSV)';
+
+  @override
+  String get exportDailyAnalysis => 'Дневник по дням для анализа (CSV)';
+
+  @override
+  String get navJournal => 'Дневник';
+
+  @override
+  String get addJournalDay => 'Добавить день';
+
+  @override
+  String get editJournalDay => 'Изменить день';
+
+  @override
+  String get journalDate => 'Дата';
+
+  @override
+  String get journalBodySection => 'Тело';
+
+  @override
+  String get journalNutritionSection => 'Питание';
+
+  @override
+  String get bodyWeightKgLabel => 'Вес (кг)';
+
+  @override
+  String get sleepHoursLabel => 'Сон (ч)';
+
+  @override
+  String get wellbeingLabel => 'Самочувствие';
+
+  @override
+  String get journalNotesHint =>
+      'Как прошёл день? Всё, что могло повлиять на тренировку.';
+
+  @override
+  String get journalEmptyTitle => 'Дневник пока пуст';
+
+  @override
+  String get journalEmptyMessage =>
+      'Записывайте вес, сон, самочувствие и калории, чтобы видеть, как они влияют на тренировки.';
+
+  @override
+  String get journalAverage7Days => 'За последние 7 дней';
+
+  @override
+  String get kcalShort => 'ккал';
+
+  @override
+  String get sleepShort => 'сон, ч';
+
+  @override
+  String get weightShort => 'вес, кг';
+
+  @override
+  String get wellbeingShort => 'состояние';
+
+  @override
+  String weightKgValue(String value) {
+    return '$value кг';
+  }
+
+  @override
+  String sleepHoursValue(String value) {
+    return 'сон $value ч';
+  }
+
+  @override
+  String get workoutComment => 'Комментарий к тренировке';
+
+  @override
+  String get workoutCommentHint => 'Например: не выспался, быстро устал';
+
+  @override
+  String get journalReminder => 'Напоминание о дневнике';
+
+  @override
+  String get journalReminderDaily => 'Напоминать каждый день';
+
+  @override
+  String get journalReminderTime => 'Время';
+
+  @override
+  String get journalReminderTitle => 'Заполните дневник';
+
+  @override
+  String get journalReminderBody =>
+      'Вес, сон, самочувствие и калории за сегодня.';
+
+  @override
+  String get journalReminderChannel => 'Напоминания о дневнике';
+
+  @override
+  String get journalReminderChannelDescription =>
+      'Ежедневное напоминание заполнить дневник.';
+
+  @override
+  String get journalReminderNoPermission =>
+      'Разрешите уведомления, чтобы получать напоминания.';
 }

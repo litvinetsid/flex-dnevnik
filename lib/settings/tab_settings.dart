@@ -19,6 +19,7 @@ class _TabSettingsState extends State<TabSettings> {
     (name: 'HistoryPage', enabled: false),
     (name: 'PlansPage', enabled: false),
     (name: 'GraphsPage', enabled: false),
+    (name: 'JournalPage', enabled: false),
     (name: 'TimerPage', enabled: false),
     (name: 'SettingsPage', enabled: false),
   ];
@@ -73,6 +74,7 @@ class _TabSettingsState extends State<TabSettings> {
       'HistoryPage': (Icons.history, context.l10n.navHistory),
       'PlansPage': (Icons.calendar_today_outlined, context.l10n.navPlans),
       'GraphsPage': (Icons.insights_rounded, context.l10n.navGraphs),
+      'JournalPage': (Icons.book_outlined, context.l10n.navJournal),
       'TimerPage': (Icons.timer_outlined, context.l10n.navTimer),
       'SettingsPage': (Icons.settings_outlined, context.l10n.navSettings),
     };

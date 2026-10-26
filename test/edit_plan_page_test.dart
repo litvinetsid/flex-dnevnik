@@ -85,9 +85,9 @@ void main() {
     await database.plans.deleteAll();
     await database.plans.insertOne(plan);
     for (final exercise in const [
-      'Arnold press',
-      'Back extension',
-      'Barbell bench press',
+      'Жим Арнольда',
+      'Гиперэкстензия',
+      'Жим штанги лёжа',
     ]) {
       await insertPlanExerciseFixture(database, planId: 1, exercise: exercise);
     }
@@ -102,9 +102,10 @@ void main() {
 
     await tester.tap(find.text('Mon'));
     await tester.tap(find.text('Thu'));
-    await scrollTo(tester, find.text('Arnold press'));
-    await tester.tap(find.text('Arnold press'));
-    await tester.tap(find.text('Barbell biceps curl'));
+    await scrollTo(tester, find.text('Жим Арнольда'));
+    await tester.tap(find.text('Жим Арнольда'));
+    await scrollTo(tester, find.text('Гиперэкстензия'));
+    await tester.tap(find.text('Гиперэкстензия'));
 
     await tester.tap(find.text('Save'));
     await tester.pumpAndSettle();
@@ -129,7 +130,7 @@ void main() {
     final planExercise = await insertPlanExerciseFixture(
       database,
       planId: 1,
-      exercise: 'Arnold press',
+      exercise: 'Жим Арнольда',
     );
     final workout = await database.workouts.insertReturning(
       WorkoutsCompanion.insert(
@@ -182,21 +183,21 @@ void main() {
     await database.plans.deleteAll();
     await database.plans.insertOne(plan);
     for (final exercise in const [
-      'Arnold press',
-      'Back extension',
-      'Barbell bench press',
+      'Жим Арнольда',
+      'Гиперэкстензия',
+      'Жим штанги лёжа',
     ]) {
       await insertPlanExerciseFixture(database, planId: 1, exercise: exercise);
     }
 
     await harness.pump(tester, EditPlanPage(plan: plan));
 
-    await scrollTo(tester, find.text('Arnold press'));
-    await tester.enterText(find.byType(SearchBar), 'Back extension');
+    await scrollTo(tester, find.text('Жим Арнольда'));
+    await tester.enterText(find.byType(SearchBar), 'Гиперэкстензия');
     await tester.pumpAndSettle();
 
-    expect(find.text('Back extension'), findsNWidgets(2));
-    expect(find.text('Arnold press'), findsNothing);
+    expect(find.text('Гиперэкстензия'), findsNWidgets(2));
+    expect(find.text('Жим Арнольда'), findsNothing);
   });
 
   testWidgets('EditPlanPage confirms before discarding changes', (
@@ -216,7 +217,7 @@ void main() {
     await insertPlanExerciseFixture(
       database,
       planId: 1,
-      exercise: 'Arnold press',
+      exercise: 'Жим Арнольда',
     );
 
     await harness.pump(

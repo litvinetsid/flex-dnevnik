@@ -153,12 +153,19 @@ void main() {
     Map<String, List<Map<String, Object?>>> before,
   ) => {
     ...before,
+    'daily_logs': [],
+    'workouts': [
+      for (final workout in before['workouts']!) {...workout, 'notes': null},
+    ],
     'settings': [
       for (final setting in before['settings']!)
         {
           for (final entry in setting.entries)
             if (entry.key != 'rep_estimation') entry.key: entry.value,
           'default_graph_limit': 30,
+          'tabs': '${setting['tabs']},JournalPage',
+          'journal_reminder': 0,
+          'journal_reminder_minutes': 1380,
         },
     ],
   };
@@ -290,7 +297,11 @@ Future<void> main(List<String> args) async {
       final database = openPersistent();
       final actual = await snapshot(database);
       for (final table in expected.keys.where((name) => name != 'settings')) {
-        expect(actual[table], expected[table], reason: table);
+        expect(
+          actual[table],
+          afterGraphLimitUpgrade(expected)[table],
+          reason: table,
+        );
       }
       final settings = await database.settings.select().getSingle();
       expect(settings.localeOverride, 'en');

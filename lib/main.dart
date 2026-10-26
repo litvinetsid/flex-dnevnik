@@ -149,13 +149,55 @@ Widget appProviders(Setting initialSettings) => ValueListenableBuilder<int>(
 );
 
 class App extends StatelessWidget {
-  static final _lightScheme = ColorScheme.fromSeed(
-    seedColor: Colors.deepPurple,
-  );
+  static const _seedColor = Color(0xFF0F8A6E);
+  static final _lightScheme = ColorScheme.fromSeed(seedColor: _seedColor);
   static final _darkScheme = ColorScheme.fromSeed(
-    seedColor: Colors.deepPurple,
+    seedColor: _seedColor,
     brightness: Brightness.dark,
   );
+  static final _cardTheme = CardThemeData(
+    elevation: 0,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+  );
+  static final _fabTheme = FloatingActionButtonThemeData(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+  );
+  static const _appBarTheme = AppBarTheme(
+    centerTitle: false,
+    scrolledUnderElevation: 2,
+  );
+
+  /// Shared component styling layered on top of a colour scheme.
+  static ThemeData _themeFor(ColorScheme? scheme, String inputStyle) {
+    final base = ThemeData(
+      colorScheme: scheme,
+      fontFamily: 'Manrope',
+      useMaterial3: true,
+      inputDecorationTheme: _inputDecorationTheme(inputStyle),
+      popupMenuTheme: _popupMenuTheme,
+      pageTransitionsTheme: _pageTransitionsTheme(),
+      cardTheme: _cardTheme,
+      floatingActionButtonTheme: _fabTheme,
+      appBarTheme: _appBarTheme,
+    );
+    return base.copyWith(
+      cardTheme: _cardTheme.copyWith(
+        color: base.colorScheme.surfaceContainerHigh,
+      ),
+      listTileTheme: ListTileThemeData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+      textTheme: base.textTheme.copyWith(
+        titleLarge: base.textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.w700,
+        ),
+        headlineSmall: base.textTheme.headlineSmall?.copyWith(
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+
   static const _popupMenuTheme = PopupMenuThemeData(
     menuPadding: EdgeInsets.zero,
   );
@@ -249,23 +291,12 @@ class App extends StatelessWidget {
             );
           },
           onGenerateTitle: (context) => context.l10n.appTitle,
-          theme: ThemeData(
-            colorScheme: colors ? lightDynamic : _lightScheme,
-            fontFamily: 'Manrope',
-            useMaterial3: true,
-            inputDecorationTheme: _inputDecorationTheme(inputStyle),
-            popupMenuTheme: _popupMenuTheme,
-            pageTransitionsTheme: _pageTransitionsTheme(),
-          ),
-          darkTheme: ThemeData(
-            colorScheme: (colors ? darkDynamic : _darkScheme)?.copyWith(
+          theme: _themeFor(colors ? lightDynamic : _lightScheme, inputStyle),
+          darkTheme: _themeFor(
+            (colors ? darkDynamic : _darkScheme)?.copyWith(
               surface: amoledDark ? Colors.black : null,
             ),
-            fontFamily: 'Manrope',
-            useMaterial3: true,
-            inputDecorationTheme: _inputDecorationTheme(inputStyle),
-            popupMenuTheme: _popupMenuTheme,
-            pageTransitionsTheme: _pageTransitionsTheme(),
+            inputStyle,
           ),
           themeMode: mode,
           home: HomePage(),

@@ -34,10 +34,14 @@ class Settings extends Table {
   BoolColumn get showGlobalProgress =>
       boolean().withDefault(const Constant(true))();
   BoolColumn get showUnits => boolean()();
+  BoolColumn get journalReminder =>
+      boolean().withDefault(const Constant(false))();
+  IntColumn get journalReminderMinutes =>
+      integer().withDefault(const Constant(23 * 60))();
   TextColumn get strengthUnit => text()();
   BoolColumn get systemColors => boolean()();
   TextColumn get tabs => text().withDefault(
-    const Constant("HistoryPage,PlansPage,GraphsPage,TimerPage"),
+    const Constant("HistoryPage,PlansPage,GraphsPage,JournalPage,TimerPage"),
   )();
   TextColumn get themeMode => text()();
   IntColumn get timerDuration => integer()();

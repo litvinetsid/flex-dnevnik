@@ -2,6 +2,7 @@
 import 'package:drift/drift.dart';
 import 'package:flex/constants.dart';
 import 'package:flex/database/body_weights.dart';
+import 'package:flex/database/daily_logs.dart';
 import 'package:flex/database/categories.dart';
 import 'package:flex/database/database.steps.dart';
 import 'package:flex/database/defaults.dart';
@@ -291,6 +292,7 @@ Future<void> _backfillExerciseHistory(AppDatabase database) async {
     Workouts,
     ExerciseSets,
     BodyWeights,
+    DailyLogs,
     Settings,
     PlanExercises,
   ],
@@ -336,8 +338,8 @@ class AppDatabase extends _$AppDatabase {
             defaultExercises.map(
               (entry) => ExercisesCompanion.insert(
                 name: entry.$1,
-                kind: 'strength',
-                displayUnit: 'kg',
+                kind: entry.$3,
+                displayUnit: entry.$3 == 'cardio' ? 'km' : 'kg',
                 categoryId: Value(categoryIds[entry.$2]),
               ),
             ),
@@ -1086,6 +1088,25 @@ class AppDatabase extends _$AppDatabase {
             from69To70: (Migrator m, Schema70 schema) async {
               await m.alterTable(TableMigration(schema.settings));
             },
+            from70To71: (Migrator m, Schema71 schema) async {
+              await m.createTable(schema.dailyLogs);
+              await m.createIndex(schema.dailyLogsDate);
+              await m.addColumn(schema.workouts, schema.workouts.notes);
+              await m.addColumn(
+                schema.settings,
+                schema.settings.journalReminder,
+              );
+              await m.addColumn(
+                schema.settings,
+                schema.settings.journalReminderMinutes,
+              );
+              await m.alterTable(TableMigration(schema.settings));
+              await customStatement('''
+                UPDATE settings
+                SET tabs = tabs || ',JournalPage'
+                WHERE ',' || tabs || ',' NOT LIKE '%,JournalPage,%'
+              ''');
+            },
           );
           await transaction(() async {
             await upgrade(m, from, to);
@@ -1107,5 +1128,5 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 70;
+  int get schemaVersion => 71;
 }

@@ -130,6 +130,8 @@ class BottomNav extends StatelessWidget {
         return Icons.calendar_today_outlined;
       case 'GraphsPage':
         return Icons.insights_rounded;
+      case 'JournalPage':
+        return Icons.book_rounded;
       case 'TimerPage':
         return Icons.timer_rounded;
       case 'SettingsPage':
@@ -148,6 +150,8 @@ class BottomNav extends StatelessWidget {
         return l10n.navPlans;
       case 'GraphsPage':
         return l10n.navGraphs;
+      case 'JournalPage':
+        return l10n.navJournal;
       case 'TimerPage':
         return l10n.navTimer;
       case 'SettingsPage':

@@ -24,9 +24,9 @@ void main() {
     expect(find.text('Swap workout'), findsOne);
 
     await tester.pumpAndSettle();
-    expect(find.text('Arnold press'), findsOne);
+    expect(find.text('Болгарские сплит-приседания'), findsOne);
 
-    await tester.tap(find.text('Arnold press'));
+    await tester.tap(find.text('Болгарские сплит-приседания'));
     await tester.pumpAndSettle();
     expect(find.text('Swap workout'), findsNothing);
 
@@ -39,8 +39,9 @@ void main() {
       (exercise) => exercise.id == original.id,
     );
     final arnoldPress =
-        await (harness.database.exercises.select()
-              ..where((exercise) => exercise.name.equals('Arnold press')))
+        await (harness.database.exercises.select()..where(
+              (exercise) => exercise.name.equals('Болгарские сплит-приседания'),
+            ))
             .getSingle();
     expect(swapped.exerciseId, arnoldPress.id);
     expect(swapped.sequence, original.sequence);

@@ -1572,4 +1572,128 @@ class AppLocalizationsId extends AppLocalizations {
   String previousPerformance(String date, String sets) {
     return 'Sebelumnya $date · $sets';
   }
+
+  @override
+  String get kcalLabel => 'Calories (kcal)';
+
+  @override
+  String get proteinLabel => 'Protein (g)';
+
+  @override
+  String get fatLabel => 'Fat (g)';
+
+  @override
+  String get carbsLabel => 'Carbs (g)';
+
+  @override
+  String kcalValue(String value) {
+    return '$value kcal';
+  }
+
+  @override
+  String macrosShort(String protein, String fat, String carbs) {
+    return 'P $protein · F $fat · C $carbs';
+  }
+
+  @override
+  String get exportWorkoutAnalysis => 'Workouts for analysis (CSV)';
+
+  @override
+  String get exportDailyAnalysis => 'Daily journal for analysis (CSV)';
+
+  @override
+  String get navJournal => 'Journal';
+
+  @override
+  String get addJournalDay => 'Add day';
+
+  @override
+  String get editJournalDay => 'Edit day';
+
+  @override
+  String get journalDate => 'Date';
+
+  @override
+  String get journalBodySection => 'Body';
+
+  @override
+  String get journalNutritionSection => 'Nutrition';
+
+  @override
+  String get bodyWeightKgLabel => 'Weight (kg)';
+
+  @override
+  String get sleepHoursLabel => 'Sleep (h)';
+
+  @override
+  String get wellbeingLabel => 'How do you feel?';
+
+  @override
+  String get journalNotesHint =>
+      'How was the day? Anything that may affect training.';
+
+  @override
+  String get journalEmptyTitle => 'Your journal is empty';
+
+  @override
+  String get journalEmptyMessage =>
+      'Record weight, sleep, wellbeing and calories each day to see how they affect training.';
+
+  @override
+  String get journalAverage7Days => 'Last 7 days';
+
+  @override
+  String get kcalShort => 'kcal';
+
+  @override
+  String get sleepShort => 'sleep, h';
+
+  @override
+  String get weightShort => 'weight, kg';
+
+  @override
+  String get wellbeingShort => 'wellbeing';
+
+  @override
+  String weightKgValue(String value) {
+    return '$value kg';
+  }
+
+  @override
+  String sleepHoursValue(String value) {
+    return '$value h sleep';
+  }
+
+  @override
+  String get workoutComment => 'Workout comment';
+
+  @override
+  String get workoutCommentHint => 'e.g. slept badly, got tired quickly';
+
+  @override
+  String get journalReminder => 'Journal reminder';
+
+  @override
+  String get journalReminderDaily => 'Remind me every day';
+
+  @override
+  String get journalReminderTime => 'Time';
+
+  @override
+  String get journalReminderTitle => 'Fill in your journal';
+
+  @override
+  String get journalReminderBody =>
+      'Weight, sleep, wellbeing and calories for today.';
+
+  @override
+  String get journalReminderChannel => 'Journal reminders';
+
+  @override
+  String get journalReminderChannelDescription =>
+      'Daily reminder to fill in the journal.';
+
+  @override
+  String get journalReminderNoPermission =>
+      'Allow notifications to get reminders.';
 }

@@ -5,6 +5,7 @@ import 'package:flex/app_fab.dart';
 import 'package:flex/bottom_nav.dart';
 import 'package:flex/constants.dart';
 import 'package:flex/database/body_weight_repository.dart';
+import 'package:flex/database/daily_log_repository.dart';
 import 'package:flex/database/database.dart';
 import 'package:flex/database/exercise_set_repository.dart';
 import 'package:flex/empty_state.dart';
@@ -59,6 +60,8 @@ class _StartPlanPageState extends State<StartPlanPage>
   DateTime? _lastSavedAt;
   String _unit = 'kg';
   StartPlanData? _data;
+  String? _workoutNotes;
+  bool _workoutNotesEdited = false;
   late Stream<StartPlanData> _stream;
 
   int get _selected {
@@ -75,6 +78,47 @@ class _StartPlanPageState extends State<StartPlanPage>
       widget.initial?.firstOrNull?.exercise;
   bool get _cardio => _currentExercise?.kind == 'cardio';
   String? get _image => _currentExercise?.image;
+
+  Future<void> _editWorkoutNotes(Workout? current) async {
+    final l10n = context.l10n;
+    final controller = TextEditingController(
+      text: (_workoutNotesEdited ? _workoutNotes : current?.notes) ?? '',
+    );
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.workoutComment),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          minLines: 3,
+          maxLines: 8,
+          textCapitalization: TextCapitalization.sentences,
+          decoration: InputDecoration(hintText: l10n.workoutCommentHint),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.actionCancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, controller.text.trim()),
+            child: Text(l10n.actionSave),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+    if (result == null) return;
+    final workout = current ?? await resumeOrStartWorkout(db, widget.plan.id);
+    final notes = result.isEmpty ? null : result;
+    await setWorkoutNotes(db, workout.id, notes);
+    if (!mounted) return;
+    setState(() {
+      _workoutNotes = notes;
+      _workoutNotesEdited = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,6 +204,17 @@ class _StartPlanPageState extends State<StartPlanPage>
               onPressed: () => Navigator.pop(context),
             ),
             actions: [
+              IconButton(
+                tooltip: context.l10n.workoutComment,
+                onPressed: () => _editWorkoutNotes(workout),
+                icon: Icon(
+                  (_workoutNotesEdited ? _workoutNotes : workout?.notes)
+                              ?.isNotEmpty ==
+                          true
+                      ? Icons.comment
+                      : Icons.add_comment_outlined,
+                ),
+              ),
               IconButton(
                 tooltip: context.l10n.editPlan,
                 onPressed: editPlan,

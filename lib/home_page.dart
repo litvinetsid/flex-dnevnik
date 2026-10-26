@@ -4,6 +4,8 @@ import 'package:flex/database/database.dart';
 import 'package:flex/graph/graphs_page.dart';
 import 'package:flex/l10n/l10n.dart';
 import 'package:flex/main.dart';
+import 'package:flex/journal/journal_page.dart';
+import 'package:flex/journal/journal_reminder.dart';
 import 'package:flex/plan/plans_page.dart';
 import 'package:flex/plan/start_plan_page.dart';
 import 'package:flex/platform_page_route.dart';
@@ -44,6 +46,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _timerState.addListener(_handleTimerNotificationTarget);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _handleTimerNotificationTarget();
+      if (mounted) refreshJournalReminders(context.l10n);
     });
 
     final info = PackageInfo.fromPlatform();
@@ -281,6 +284,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         return PlansPage(key: _plansPageKey, tabController: _controller);
       } else if (tab == 'GraphsPage') {
         return GraphsPage(tabController: _controller);
+      } else if (tab == 'JournalPage') {
+        return JournalPage(tabController: _controller);
       } else if (tab == 'TimerPage') {
         return TimerPage(tabController: _controller);
       } else if (tab == 'SettingsPage') {

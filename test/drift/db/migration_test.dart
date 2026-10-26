@@ -643,7 +643,7 @@ void main() {
         expect(settings.length, 1);
         expect(
           settings.first.tabs,
-          'HistoryPage,PlansPage,GraphsPage,TimerPage',
+          'HistoryPage,PlansPage,GraphsPage,TimerPage,JournalPage',
         );
       },
     );

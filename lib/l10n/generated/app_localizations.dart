@@ -2891,6 +2891,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Previously {date} · {sets}'**
   String previousPerformance(String date, String sets);
+
+  /// Input label for daily calories.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories (kcal)'**
+  String get kcalLabel;
+
+  /// Input label for daily protein grams.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein (g)'**
+  String get proteinLabel;
+
+  /// Input label for daily fat grams.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat (g)'**
+  String get fatLabel;
+
+  /// Input label for daily carbohydrate grams.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs (g)'**
+  String get carbsLabel;
+
+  /// A formatted calorie amount.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} kcal'**
+  String kcalValue(String value);
+
+  /// Compact protein, fat and carbohydrate grams.
+  ///
+  /// In en, this message translates to:
+  /// **'P {protein} · F {fat} · C {carbs}'**
+  String macrosShort(String protein, String fat, String carbs);
+
+  /// Export option for a flat per-set CSV.
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts for analysis (CSV)'**
+  String get exportWorkoutAnalysis;
+
+  /// Export option for a per-day CSV with weight, sleep, wellbeing, nutrition and comments.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily journal for analysis (CSV)'**
+  String get exportDailyAnalysis;
+
+  /// Navigation label for the daily journal.
+  ///
+  /// In en, this message translates to:
+  /// **'Journal'**
+  String get navJournal;
+
+  /// Action and title for adding a journal day.
+  ///
+  /// In en, this message translates to:
+  /// **'Add day'**
+  String get addJournalDay;
+
+  /// Title for editing a journal day.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit day'**
+  String get editJournalDay;
+
+  /// Label for the day a journal entry belongs to.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get journalDate;
+
+  /// Journal section heading for weight and sleep.
+  ///
+  /// In en, this message translates to:
+  /// **'Body'**
+  String get journalBodySection;
+
+  /// Journal section heading for calories and macros.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition'**
+  String get journalNutritionSection;
+
+  /// Input label for body weight in kilograms.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight (kg)'**
+  String get bodyWeightKgLabel;
+
+  /// Input label for hours slept.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep (h)'**
+  String get sleepHoursLabel;
+
+  /// Label for the 1 to 5 wellbeing picker.
+  ///
+  /// In en, this message translates to:
+  /// **'How do you feel?'**
+  String get wellbeingLabel;
+
+  /// Hint for the journal day comment.
+  ///
+  /// In en, this message translates to:
+  /// **'How was the day? Anything that may affect training.'**
+  String get journalNotesHint;
+
+  /// Empty state title on the journal tab.
+  ///
+  /// In en, this message translates to:
+  /// **'Your journal is empty'**
+  String get journalEmptyTitle;
+
+  /// Empty state message on the journal tab.
+  ///
+  /// In en, this message translates to:
+  /// **'Record weight, sleep, wellbeing and calories each day to see how they affect training.'**
+  String get journalEmptyMessage;
+
+  /// Heading for the seven day journal summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 7 days'**
+  String get journalAverage7Days;
+
+  /// Short caption for average calories.
+  ///
+  /// In en, this message translates to:
+  /// **'kcal'**
+  String get kcalShort;
+
+  /// Short caption for average sleep hours.
+  ///
+  /// In en, this message translates to:
+  /// **'sleep, h'**
+  String get sleepShort;
+
+  /// Short caption for latest body weight.
+  ///
+  /// In en, this message translates to:
+  /// **'weight, kg'**
+  String get weightShort;
+
+  /// Short caption for average wellbeing.
+  ///
+  /// In en, this message translates to:
+  /// **'wellbeing'**
+  String get wellbeingShort;
+
+  /// A formatted body weight in kilograms.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} kg'**
+  String weightKgValue(String value);
+
+  /// A formatted sleep duration in hours.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} h sleep'**
+  String sleepHoursValue(String value);
+
+  /// Title and tooltip for the comment on the current workout.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout comment'**
+  String get workoutComment;
+
+  /// Hint for the workout comment.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. slept badly, got tired quickly'**
+  String get workoutCommentHint;
+
+  /// Title and tooltip for the daily journal reminder settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Journal reminder'**
+  String get journalReminder;
+
+  /// Switch label enabling the daily journal reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me every day'**
+  String get journalReminderDaily;
+
+  /// Label for the daily journal reminder time.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get journalReminderTime;
+
+  /// Notification title for the daily journal reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in your journal'**
+  String get journalReminderTitle;
+
+  /// Notification body for the daily journal reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight, sleep, wellbeing and calories for today.'**
+  String get journalReminderBody;
+
+  /// Android notification channel name for journal reminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Journal reminders'**
+  String get journalReminderChannel;
+
+  /// Android notification channel description for journal reminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily reminder to fill in the journal.'**
+  String get journalReminderChannelDescription;
+
+  /// Shown when notification permission was denied for reminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow notifications to get reminders.'**
+  String get journalReminderNoPermission;
 }
 
 class _AppLocalizationsDelegate

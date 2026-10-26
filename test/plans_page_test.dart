@@ -17,7 +17,7 @@ void main() {
     await pumpPlansPage(tester, harness);
 
     expect(find.text('Search plans...'), findsOne);
-    expect(find.textContaining('Barbell bench press'), findsOne);
+    expect(find.textContaining('Жим штанги лёжа'), findsOne);
     final list = tester.widget<ReorderableListView>(
       find.byType(ReorderableListView),
     );
@@ -38,7 +38,7 @@ void main() {
     final harness = await FlexTestHarness.create();
     await pumpPlansPage(tester, harness);
 
-    await tester.tap(find.textContaining('Barbell bench press'));
+    await tester.tap(find.textContaining('Жим штанги лёжа'));
     await tester.pumpAndSettle();
 
     expect(find.text('Save'), findsOne);
@@ -60,7 +60,7 @@ void main() {
     final harness = await FlexTestHarness.create();
     await pumpPlansPage(tester, harness);
 
-    await tester.longPress(find.textContaining('Barbell bench press'));
+    await tester.longPress(find.textContaining('Жим штанги лёжа'));
     await tester.pumpAndSettle();
 
     expect(find.text('1'), findsOne);
@@ -70,7 +70,7 @@ void main() {
     final harness = await FlexTestHarness.create();
     await pumpPlansPage(tester, harness);
 
-    await tester.longPress(find.textContaining('Barbell bench press'));
+    await tester.longPress(find.textContaining('Жим штанги лёжа'));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Delete selected'));
     await tester.pumpAndSettle();

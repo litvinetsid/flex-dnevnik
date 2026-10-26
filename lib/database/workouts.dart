@@ -19,4 +19,5 @@ class Workouts extends Table {
   )();
   DateTimeColumn get startedAt => dateTime()();
   DateTimeColumn get endedAt => dateTime().nullable()();
+  TextColumn get notes => text().nullable()();
 }

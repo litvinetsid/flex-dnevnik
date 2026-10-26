@@ -37,7 +37,7 @@ gradle.projectsEvaluated {
     def defaultRulesDir = new File(project(':app').layout.buildDirectory.get().asFile,
             'intermediates/default_proguard_files/global')
     def rules = release.proguardFiles.collect { file ->
-        file.path.contains('/android/app/build/intermediates/default_proguard_files/global/')
+        file.path.replace('\\', '/').contains('/android/app/build/intermediates/default_proguard_files/global/')
                 ? new File(defaultRulesDir, file.name) : file
     }
     release.proguardFiles.clear()

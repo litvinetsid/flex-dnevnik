@@ -33,6 +33,7 @@ dependencies:
       url: https://github.com/insertjokehere/flutter_msvcredist.git
       ref: main
   timeago: ^3.2.2
+  timezone: ^0.11.2
   sqlite3_web: ^0.9.4
   drift_dev: ^2.35.1
   drafter: ^0.3.0

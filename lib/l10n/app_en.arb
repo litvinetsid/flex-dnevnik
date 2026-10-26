@@ -1,6 +1,8 @@
 {
   "showUpdateNotices": "Show update notices",
-  "@showUpdateNotices": {"description": "Whether to show update notices after upgrading the app."},
+  "@showUpdateNotices": {
+    "description": "Whether to show update notices after upgrading the app."
+  },
   "@@locale": "en",
   "appTitle": "Flex",
   "@appTitle": {
@@ -2027,5 +2029,185 @@
         "type": "String"
       }
     }
+  },
+  "kcalLabel": "Calories (kcal)",
+  "@kcalLabel": {
+    "description": "Input label for daily calories."
+  },
+  "proteinLabel": "Protein (g)",
+  "@proteinLabel": {
+    "description": "Input label for daily protein grams."
+  },
+  "fatLabel": "Fat (g)",
+  "@fatLabel": {
+    "description": "Input label for daily fat grams."
+  },
+  "carbsLabel": "Carbs (g)",
+  "@carbsLabel": {
+    "description": "Input label for daily carbohydrate grams."
+  },
+  "kcalValue": "{value} kcal",
+  "@kcalValue": {
+    "description": "A formatted calorie amount.",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "2,150"
+      }
+    }
+  },
+  "macrosShort": "P {protein} · F {fat} · C {carbs}",
+  "@macrosShort": {
+    "description": "Compact protein, fat and carbohydrate grams.",
+    "placeholders": {
+      "protein": {
+        "type": "String",
+        "example": "120"
+      },
+      "fat": {
+        "type": "String",
+        "example": "70"
+      },
+      "carbs": {
+        "type": "String",
+        "example": "250"
+      }
+    }
+  },
+  "exportWorkoutAnalysis": "Workouts for analysis (CSV)",
+  "@exportWorkoutAnalysis": {
+    "description": "Export option for a flat per-set CSV."
+  },
+  "exportDailyAnalysis": "Daily journal for analysis (CSV)",
+  "@exportDailyAnalysis": {
+    "description": "Export option for a per-day CSV with weight, sleep, wellbeing, nutrition and comments."
+  },
+  "navJournal": "Journal",
+  "@navJournal": {
+    "description": "Navigation label for the daily journal."
+  },
+  "addJournalDay": "Add day",
+  "@addJournalDay": {
+    "description": "Action and title for adding a journal day."
+  },
+  "editJournalDay": "Edit day",
+  "@editJournalDay": {
+    "description": "Title for editing a journal day."
+  },
+  "journalDate": "Date",
+  "@journalDate": {
+    "description": "Label for the day a journal entry belongs to."
+  },
+  "journalBodySection": "Body",
+  "@journalBodySection": {
+    "description": "Journal section heading for weight and sleep."
+  },
+  "journalNutritionSection": "Nutrition",
+  "@journalNutritionSection": {
+    "description": "Journal section heading for calories and macros."
+  },
+  "bodyWeightKgLabel": "Weight (kg)",
+  "@bodyWeightKgLabel": {
+    "description": "Input label for body weight in kilograms."
+  },
+  "sleepHoursLabel": "Sleep (h)",
+  "@sleepHoursLabel": {
+    "description": "Input label for hours slept."
+  },
+  "wellbeingLabel": "How do you feel?",
+  "@wellbeingLabel": {
+    "description": "Label for the 1 to 5 wellbeing picker."
+  },
+  "journalNotesHint": "How was the day? Anything that may affect training.",
+  "@journalNotesHint": {
+    "description": "Hint for the journal day comment."
+  },
+  "journalEmptyTitle": "Your journal is empty",
+  "@journalEmptyTitle": {
+    "description": "Empty state title on the journal tab."
+  },
+  "journalEmptyMessage": "Record weight, sleep, wellbeing and calories each day to see how they affect training.",
+  "@journalEmptyMessage": {
+    "description": "Empty state message on the journal tab."
+  },
+  "journalAverage7Days": "Last 7 days",
+  "@journalAverage7Days": {
+    "description": "Heading for the seven day journal summary."
+  },
+  "kcalShort": "kcal",
+  "@kcalShort": {
+    "description": "Short caption for average calories."
+  },
+  "sleepShort": "sleep, h",
+  "@sleepShort": {
+    "description": "Short caption for average sleep hours."
+  },
+  "weightShort": "weight, kg",
+  "@weightShort": {
+    "description": "Short caption for latest body weight."
+  },
+  "wellbeingShort": "wellbeing",
+  "@wellbeingShort": {
+    "description": "Short caption for average wellbeing."
+  },
+  "weightKgValue": "{value} kg",
+  "@weightKgValue": {
+    "description": "A formatted body weight in kilograms.",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "72.5"
+      }
+    }
+  },
+  "sleepHoursValue": "{value} h sleep",
+  "@sleepHoursValue": {
+    "description": "A formatted sleep duration in hours.",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "7.5"
+      }
+    }
+  },
+  "workoutComment": "Workout comment",
+  "@workoutComment": {
+    "description": "Title and tooltip for the comment on the current workout."
+  },
+  "workoutCommentHint": "e.g. slept badly, got tired quickly",
+  "@workoutCommentHint": {
+    "description": "Hint for the workout comment."
+  },
+  "journalReminder": "Journal reminder",
+  "@journalReminder": {
+    "description": "Title and tooltip for the daily journal reminder settings."
+  },
+  "journalReminderDaily": "Remind me every day",
+  "@journalReminderDaily": {
+    "description": "Switch label enabling the daily journal reminder."
+  },
+  "journalReminderTime": "Time",
+  "@journalReminderTime": {
+    "description": "Label for the daily journal reminder time."
+  },
+  "journalReminderTitle": "Fill in your journal",
+  "@journalReminderTitle": {
+    "description": "Notification title for the daily journal reminder."
+  },
+  "journalReminderBody": "Weight, sleep, wellbeing and calories for today.",
+  "@journalReminderBody": {
+    "description": "Notification body for the daily journal reminder."
+  },
+  "journalReminderChannel": "Journal reminders",
+  "@journalReminderChannel": {
+    "description": "Android notification channel name for journal reminders."
+  },
+  "journalReminderChannelDescription": "Daily reminder to fill in the journal.",
+  "@journalReminderChannelDescription": {
+    "description": "Android notification channel description for journal reminders."
+  },
+  "journalReminderNoPermission": "Allow notifications to get reminders.",
+  "@journalReminderNoPermission": {
+    "description": "Shown when notification permission was denied for reminders."
   }
 }

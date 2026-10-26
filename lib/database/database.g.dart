@@ -1313,8 +1313,17 @@ class $WorkoutsTable extends Workouts with TableInfo<$WorkoutsTable, Workout> {
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
   @override
-  List<GeneratedColumn> get $columns => [id, planId, startedAt, endedAt];
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, planId, startedAt, endedAt, notes];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1350,6 +1359,12 @@ class $WorkoutsTable extends Workouts with TableInfo<$WorkoutsTable, Workout> {
         endedAt.isAcceptableOrUnknown(data['ended_at']!, _endedAtMeta),
       );
     }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
     return context;
   }
 
@@ -1375,6 +1390,10 @@ class $WorkoutsTable extends Workouts with TableInfo<$WorkoutsTable, Workout> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}ended_at'],
       ),
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
     );
   }
 
@@ -1389,11 +1408,13 @@ class Workout extends DataClass implements Insertable<Workout> {
   final int? planId;
   final DateTime startedAt;
   final DateTime? endedAt;
+  final String? notes;
   const Workout({
     required this.id,
     this.planId,
     required this.startedAt,
     this.endedAt,
+    this.notes,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1405,6 +1426,9 @@ class Workout extends DataClass implements Insertable<Workout> {
     map['started_at'] = Variable<DateTime>(startedAt);
     if (!nullToAbsent || endedAt != null) {
       map['ended_at'] = Variable<DateTime>(endedAt);
+    }
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
     }
     return map;
   }
@@ -1419,6 +1443,9 @@ class Workout extends DataClass implements Insertable<Workout> {
       endedAt: endedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(endedAt),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
     );
   }
 
@@ -1432,6 +1459,7 @@ class Workout extends DataClass implements Insertable<Workout> {
       planId: serializer.fromJson<int?>(json['planId']),
       startedAt: serializer.fromJson<DateTime>(json['startedAt']),
       endedAt: serializer.fromJson<DateTime?>(json['endedAt']),
+      notes: serializer.fromJson<String?>(json['notes']),
     );
   }
   @override
@@ -1442,6 +1470,7 @@ class Workout extends DataClass implements Insertable<Workout> {
       'planId': serializer.toJson<int?>(planId),
       'startedAt': serializer.toJson<DateTime>(startedAt),
       'endedAt': serializer.toJson<DateTime?>(endedAt),
+      'notes': serializer.toJson<String?>(notes),
     };
   }
 
@@ -1450,11 +1479,13 @@ class Workout extends DataClass implements Insertable<Workout> {
     Value<int?> planId = const Value.absent(),
     DateTime? startedAt,
     Value<DateTime?> endedAt = const Value.absent(),
+    Value<String?> notes = const Value.absent(),
   }) => Workout(
     id: id ?? this.id,
     planId: planId.present ? planId.value : this.planId,
     startedAt: startedAt ?? this.startedAt,
     endedAt: endedAt.present ? endedAt.value : this.endedAt,
+    notes: notes.present ? notes.value : this.notes,
   );
   Workout copyWithCompanion(WorkoutsCompanion data) {
     return Workout(
@@ -1462,6 +1493,7 @@ class Workout extends DataClass implements Insertable<Workout> {
       planId: data.planId.present ? data.planId.value : this.planId,
       startedAt: data.startedAt.present ? data.startedAt.value : this.startedAt,
       endedAt: data.endedAt.present ? data.endedAt.value : this.endedAt,
+      notes: data.notes.present ? data.notes.value : this.notes,
     );
   }
 
@@ -1471,13 +1503,14 @@ class Workout extends DataClass implements Insertable<Workout> {
           ..write('id: $id, ')
           ..write('planId: $planId, ')
           ..write('startedAt: $startedAt, ')
-          ..write('endedAt: $endedAt')
+          ..write('endedAt: $endedAt, ')
+          ..write('notes: $notes')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, planId, startedAt, endedAt);
+  int get hashCode => Object.hash(id, planId, startedAt, endedAt, notes);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1485,7 +1518,8 @@ class Workout extends DataClass implements Insertable<Workout> {
           other.id == this.id &&
           other.planId == this.planId &&
           other.startedAt == this.startedAt &&
-          other.endedAt == this.endedAt);
+          other.endedAt == this.endedAt &&
+          other.notes == this.notes);
 }
 
 class WorkoutsCompanion extends UpdateCompanion<Workout> {
@@ -1493,29 +1527,34 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
   final Value<int?> planId;
   final Value<DateTime> startedAt;
   final Value<DateTime?> endedAt;
+  final Value<String?> notes;
   const WorkoutsCompanion({
     this.id = const Value.absent(),
     this.planId = const Value.absent(),
     this.startedAt = const Value.absent(),
     this.endedAt = const Value.absent(),
+    this.notes = const Value.absent(),
   });
   WorkoutsCompanion.insert({
     this.id = const Value.absent(),
     this.planId = const Value.absent(),
     required DateTime startedAt,
     this.endedAt = const Value.absent(),
+    this.notes = const Value.absent(),
   }) : startedAt = Value(startedAt);
   static Insertable<Workout> custom({
     Expression<int>? id,
     Expression<int>? planId,
     Expression<DateTime>? startedAt,
     Expression<DateTime>? endedAt,
+    Expression<String>? notes,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (planId != null) 'plan_id': planId,
       if (startedAt != null) 'started_at': startedAt,
       if (endedAt != null) 'ended_at': endedAt,
+      if (notes != null) 'notes': notes,
     });
   }
 
@@ -1524,12 +1563,14 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
     Value<int?>? planId,
     Value<DateTime>? startedAt,
     Value<DateTime?>? endedAt,
+    Value<String?>? notes,
   }) {
     return WorkoutsCompanion(
       id: id ?? this.id,
       planId: planId ?? this.planId,
       startedAt: startedAt ?? this.startedAt,
       endedAt: endedAt ?? this.endedAt,
+      notes: notes ?? this.notes,
     );
   }
 
@@ -1548,6 +1589,9 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
     if (endedAt.present) {
       map['ended_at'] = Variable<DateTime>(endedAt.value);
     }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
     return map;
   }
 
@@ -1557,7 +1601,8 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
           ..write('id: $id, ')
           ..write('planId: $planId, ')
           ..write('startedAt: $startedAt, ')
-          ..write('endedAt: $endedAt')
+          ..write('endedAt: $endedAt, ')
+          ..write('notes: $notes')
           ..write(')'))
         .toString();
   }
@@ -2530,6 +2575,551 @@ class BodyWeightsCompanion extends UpdateCompanion<BodyWeight> {
   }
 }
 
+class $DailyLogsTable extends DailyLogs
+    with TableInfo<$DailyLogsTable, DailyLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DailyLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _kcalMeta = const VerificationMeta('kcal');
+  @override
+  late final GeneratedColumn<int> kcal = GeneratedColumn<int>(
+    'kcal',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _proteinGMeta = const VerificationMeta(
+    'proteinG',
+  );
+  @override
+  late final GeneratedColumn<double> proteinG = GeneratedColumn<double>(
+    'protein_g',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fatGMeta = const VerificationMeta('fatG');
+  @override
+  late final GeneratedColumn<double> fatG = GeneratedColumn<double>(
+    'fat_g',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _carbsGMeta = const VerificationMeta('carbsG');
+  @override
+  late final GeneratedColumn<double> carbsG = GeneratedColumn<double>(
+    'carbs_g',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sleepHoursMeta = const VerificationMeta(
+    'sleepHours',
+  );
+  @override
+  late final GeneratedColumn<double> sleepHours = GeneratedColumn<double>(
+    'sleep_hours',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _wellbeingMeta = const VerificationMeta(
+    'wellbeing',
+  );
+  @override
+  late final GeneratedColumn<int> wellbeing = GeneratedColumn<int>(
+    'wellbeing',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    date,
+    kcal,
+    proteinG,
+    fatG,
+    carbsG,
+    sleepHours,
+    wellbeing,
+    notes,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'daily_logs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DailyLog> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('kcal')) {
+      context.handle(
+        _kcalMeta,
+        kcal.isAcceptableOrUnknown(data['kcal']!, _kcalMeta),
+      );
+    }
+    if (data.containsKey('protein_g')) {
+      context.handle(
+        _proteinGMeta,
+        proteinG.isAcceptableOrUnknown(data['protein_g']!, _proteinGMeta),
+      );
+    }
+    if (data.containsKey('fat_g')) {
+      context.handle(
+        _fatGMeta,
+        fatG.isAcceptableOrUnknown(data['fat_g']!, _fatGMeta),
+      );
+    }
+    if (data.containsKey('carbs_g')) {
+      context.handle(
+        _carbsGMeta,
+        carbsG.isAcceptableOrUnknown(data['carbs_g']!, _carbsGMeta),
+      );
+    }
+    if (data.containsKey('sleep_hours')) {
+      context.handle(
+        _sleepHoursMeta,
+        sleepHours.isAcceptableOrUnknown(data['sleep_hours']!, _sleepHoursMeta),
+      );
+    }
+    if (data.containsKey('wellbeing')) {
+      context.handle(
+        _wellbeingMeta,
+        wellbeing.isAcceptableOrUnknown(data['wellbeing']!, _wellbeingMeta),
+      );
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DailyLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DailyLog(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+      kcal: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}kcal'],
+      ),
+      proteinG: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}protein_g'],
+      ),
+      fatG: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fat_g'],
+      ),
+      carbsG: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}carbs_g'],
+      ),
+      sleepHours: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}sleep_hours'],
+      ),
+      wellbeing: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}wellbeing'],
+      ),
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+    );
+  }
+
+  @override
+  $DailyLogsTable createAlias(String alias) {
+    return $DailyLogsTable(attachedDatabase, alias);
+  }
+}
+
+class DailyLog extends DataClass implements Insertable<DailyLog> {
+  final int id;
+  final DateTime date;
+  final int? kcal;
+  final double? proteinG;
+  final double? fatG;
+  final double? carbsG;
+  final double? sleepHours;
+  final int? wellbeing;
+  final String? notes;
+  const DailyLog({
+    required this.id,
+    required this.date,
+    this.kcal,
+    this.proteinG,
+    this.fatG,
+    this.carbsG,
+    this.sleepHours,
+    this.wellbeing,
+    this.notes,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['date'] = Variable<DateTime>(date);
+    if (!nullToAbsent || kcal != null) {
+      map['kcal'] = Variable<int>(kcal);
+    }
+    if (!nullToAbsent || proteinG != null) {
+      map['protein_g'] = Variable<double>(proteinG);
+    }
+    if (!nullToAbsent || fatG != null) {
+      map['fat_g'] = Variable<double>(fatG);
+    }
+    if (!nullToAbsent || carbsG != null) {
+      map['carbs_g'] = Variable<double>(carbsG);
+    }
+    if (!nullToAbsent || sleepHours != null) {
+      map['sleep_hours'] = Variable<double>(sleepHours);
+    }
+    if (!nullToAbsent || wellbeing != null) {
+      map['wellbeing'] = Variable<int>(wellbeing);
+    }
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    return map;
+  }
+
+  DailyLogsCompanion toCompanion(bool nullToAbsent) {
+    return DailyLogsCompanion(
+      id: Value(id),
+      date: Value(date),
+      kcal: kcal == null && nullToAbsent ? const Value.absent() : Value(kcal),
+      proteinG: proteinG == null && nullToAbsent
+          ? const Value.absent()
+          : Value(proteinG),
+      fatG: fatG == null && nullToAbsent ? const Value.absent() : Value(fatG),
+      carbsG: carbsG == null && nullToAbsent
+          ? const Value.absent()
+          : Value(carbsG),
+      sleepHours: sleepHours == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sleepHours),
+      wellbeing: wellbeing == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wellbeing),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+    );
+  }
+
+  factory DailyLog.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DailyLog(
+      id: serializer.fromJson<int>(json['id']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      kcal: serializer.fromJson<int?>(json['kcal']),
+      proteinG: serializer.fromJson<double?>(json['proteinG']),
+      fatG: serializer.fromJson<double?>(json['fatG']),
+      carbsG: serializer.fromJson<double?>(json['carbsG']),
+      sleepHours: serializer.fromJson<double?>(json['sleepHours']),
+      wellbeing: serializer.fromJson<int?>(json['wellbeing']),
+      notes: serializer.fromJson<String?>(json['notes']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'date': serializer.toJson<DateTime>(date),
+      'kcal': serializer.toJson<int?>(kcal),
+      'proteinG': serializer.toJson<double?>(proteinG),
+      'fatG': serializer.toJson<double?>(fatG),
+      'carbsG': serializer.toJson<double?>(carbsG),
+      'sleepHours': serializer.toJson<double?>(sleepHours),
+      'wellbeing': serializer.toJson<int?>(wellbeing),
+      'notes': serializer.toJson<String?>(notes),
+    };
+  }
+
+  DailyLog copyWith({
+    int? id,
+    DateTime? date,
+    Value<int?> kcal = const Value.absent(),
+    Value<double?> proteinG = const Value.absent(),
+    Value<double?> fatG = const Value.absent(),
+    Value<double?> carbsG = const Value.absent(),
+    Value<double?> sleepHours = const Value.absent(),
+    Value<int?> wellbeing = const Value.absent(),
+    Value<String?> notes = const Value.absent(),
+  }) => DailyLog(
+    id: id ?? this.id,
+    date: date ?? this.date,
+    kcal: kcal.present ? kcal.value : this.kcal,
+    proteinG: proteinG.present ? proteinG.value : this.proteinG,
+    fatG: fatG.present ? fatG.value : this.fatG,
+    carbsG: carbsG.present ? carbsG.value : this.carbsG,
+    sleepHours: sleepHours.present ? sleepHours.value : this.sleepHours,
+    wellbeing: wellbeing.present ? wellbeing.value : this.wellbeing,
+    notes: notes.present ? notes.value : this.notes,
+  );
+  DailyLog copyWithCompanion(DailyLogsCompanion data) {
+    return DailyLog(
+      id: data.id.present ? data.id.value : this.id,
+      date: data.date.present ? data.date.value : this.date,
+      kcal: data.kcal.present ? data.kcal.value : this.kcal,
+      proteinG: data.proteinG.present ? data.proteinG.value : this.proteinG,
+      fatG: data.fatG.present ? data.fatG.value : this.fatG,
+      carbsG: data.carbsG.present ? data.carbsG.value : this.carbsG,
+      sleepHours: data.sleepHours.present
+          ? data.sleepHours.value
+          : this.sleepHours,
+      wellbeing: data.wellbeing.present ? data.wellbeing.value : this.wellbeing,
+      notes: data.notes.present ? data.notes.value : this.notes,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DailyLog(')
+          ..write('id: $id, ')
+          ..write('date: $date, ')
+          ..write('kcal: $kcal, ')
+          ..write('proteinG: $proteinG, ')
+          ..write('fatG: $fatG, ')
+          ..write('carbsG: $carbsG, ')
+          ..write('sleepHours: $sleepHours, ')
+          ..write('wellbeing: $wellbeing, ')
+          ..write('notes: $notes')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    date,
+    kcal,
+    proteinG,
+    fatG,
+    carbsG,
+    sleepHours,
+    wellbeing,
+    notes,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DailyLog &&
+          other.id == this.id &&
+          other.date == this.date &&
+          other.kcal == this.kcal &&
+          other.proteinG == this.proteinG &&
+          other.fatG == this.fatG &&
+          other.carbsG == this.carbsG &&
+          other.sleepHours == this.sleepHours &&
+          other.wellbeing == this.wellbeing &&
+          other.notes == this.notes);
+}
+
+class DailyLogsCompanion extends UpdateCompanion<DailyLog> {
+  final Value<int> id;
+  final Value<DateTime> date;
+  final Value<int?> kcal;
+  final Value<double?> proteinG;
+  final Value<double?> fatG;
+  final Value<double?> carbsG;
+  final Value<double?> sleepHours;
+  final Value<int?> wellbeing;
+  final Value<String?> notes;
+  const DailyLogsCompanion({
+    this.id = const Value.absent(),
+    this.date = const Value.absent(),
+    this.kcal = const Value.absent(),
+    this.proteinG = const Value.absent(),
+    this.fatG = const Value.absent(),
+    this.carbsG = const Value.absent(),
+    this.sleepHours = const Value.absent(),
+    this.wellbeing = const Value.absent(),
+    this.notes = const Value.absent(),
+  });
+  DailyLogsCompanion.insert({
+    this.id = const Value.absent(),
+    required DateTime date,
+    this.kcal = const Value.absent(),
+    this.proteinG = const Value.absent(),
+    this.fatG = const Value.absent(),
+    this.carbsG = const Value.absent(),
+    this.sleepHours = const Value.absent(),
+    this.wellbeing = const Value.absent(),
+    this.notes = const Value.absent(),
+  }) : date = Value(date);
+  static Insertable<DailyLog> custom({
+    Expression<int>? id,
+    Expression<DateTime>? date,
+    Expression<int>? kcal,
+    Expression<double>? proteinG,
+    Expression<double>? fatG,
+    Expression<double>? carbsG,
+    Expression<double>? sleepHours,
+    Expression<int>? wellbeing,
+    Expression<String>? notes,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (date != null) 'date': date,
+      if (kcal != null) 'kcal': kcal,
+      if (proteinG != null) 'protein_g': proteinG,
+      if (fatG != null) 'fat_g': fatG,
+      if (carbsG != null) 'carbs_g': carbsG,
+      if (sleepHours != null) 'sleep_hours': sleepHours,
+      if (wellbeing != null) 'wellbeing': wellbeing,
+      if (notes != null) 'notes': notes,
+    });
+  }
+
+  DailyLogsCompanion copyWith({
+    Value<int>? id,
+    Value<DateTime>? date,
+    Value<int?>? kcal,
+    Value<double?>? proteinG,
+    Value<double?>? fatG,
+    Value<double?>? carbsG,
+    Value<double?>? sleepHours,
+    Value<int?>? wellbeing,
+    Value<String?>? notes,
+  }) {
+    return DailyLogsCompanion(
+      id: id ?? this.id,
+      date: date ?? this.date,
+      kcal: kcal ?? this.kcal,
+      proteinG: proteinG ?? this.proteinG,
+      fatG: fatG ?? this.fatG,
+      carbsG: carbsG ?? this.carbsG,
+      sleepHours: sleepHours ?? this.sleepHours,
+      wellbeing: wellbeing ?? this.wellbeing,
+      notes: notes ?? this.notes,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (kcal.present) {
+      map['kcal'] = Variable<int>(kcal.value);
+    }
+    if (proteinG.present) {
+      map['protein_g'] = Variable<double>(proteinG.value);
+    }
+    if (fatG.present) {
+      map['fat_g'] = Variable<double>(fatG.value);
+    }
+    if (carbsG.present) {
+      map['carbs_g'] = Variable<double>(carbsG.value);
+    }
+    if (sleepHours.present) {
+      map['sleep_hours'] = Variable<double>(sleepHours.value);
+    }
+    if (wellbeing.present) {
+      map['wellbeing'] = Variable<int>(wellbeing.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DailyLogsCompanion(')
+          ..write('id: $id, ')
+          ..write('date: $date, ')
+          ..write('kcal: $kcal, ')
+          ..write('proteinG: $proteinG, ')
+          ..write('fatG: $fatG, ')
+          ..write('carbsG: $carbsG, ')
+          ..write('sleepHours: $sleepHours, ')
+          ..write('wellbeing: $wellbeing, ')
+          ..write('notes: $notes')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $SettingsTable extends Settings with TableInfo<$SettingsTable, Setting> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -2890,6 +3480,32 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, Setting> {
       'CHECK ("show_units" IN (0, 1))',
     ),
   );
+  static const VerificationMeta _journalReminderMeta = const VerificationMeta(
+    'journalReminder',
+  );
+  @override
+  late final GeneratedColumn<bool> journalReminder = GeneratedColumn<bool>(
+    'journal_reminder',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("journal_reminder" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _journalReminderMinutesMeta =
+      const VerificationMeta('journalReminderMinutes');
+  @override
+  late final GeneratedColumn<int> journalReminderMinutes = GeneratedColumn<int>(
+    'journal_reminder_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(23 * 60),
+  );
   static const VerificationMeta _strengthUnitMeta = const VerificationMeta(
     'strengthUnit',
   );
@@ -2923,7 +3539,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, Setting> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant("HistoryPage,PlansPage,GraphsPage,TimerPage"),
+    defaultValue: const Constant(
+      "HistoryPage,PlansPage,GraphsPage,JournalPage,TimerPage",
+    ),
   );
   static const VerificationMeta _themeModeMeta = const VerificationMeta(
     'themeMode',
@@ -3151,6 +3769,8 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, Setting> {
     showNotes,
     showGlobalProgress,
     showUnits,
+    journalReminder,
+    journalReminderMinutes,
     strengthUnit,
     systemColors,
     tabs,
@@ -3410,6 +4030,24 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, Setting> {
       );
     } else if (isInserting) {
       context.missing(_showUnitsMeta);
+    }
+    if (data.containsKey('journal_reminder')) {
+      context.handle(
+        _journalReminderMeta,
+        journalReminder.isAcceptableOrUnknown(
+          data['journal_reminder']!,
+          _journalReminderMeta,
+        ),
+      );
+    }
+    if (data.containsKey('journal_reminder_minutes')) {
+      context.handle(
+        _journalReminderMinutesMeta,
+        journalReminderMinutes.isAcceptableOrUnknown(
+          data['journal_reminder_minutes']!,
+          _journalReminderMinutesMeta,
+        ),
+      );
     }
     if (data.containsKey('strength_unit')) {
       context.handle(
@@ -3685,6 +4323,14 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, Setting> {
         DriftSqlType.bool,
         data['${effectivePrefix}show_units'],
       )!,
+      journalReminder: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}journal_reminder'],
+      )!,
+      journalReminderMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}journal_reminder_minutes'],
+      )!,
       strengthUnit: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}strength_unit'],
@@ -3794,6 +4440,8 @@ class Setting extends DataClass implements Insertable<Setting> {
   final bool showNotes;
   final bool showGlobalProgress;
   final bool showUnits;
+  final bool journalReminder;
+  final int journalReminderMinutes;
   final String strengthUnit;
   final bool systemColors;
   final String tabs;
@@ -3840,6 +4488,8 @@ class Setting extends DataClass implements Insertable<Setting> {
     required this.showNotes,
     required this.showGlobalProgress,
     required this.showUnits,
+    required this.journalReminder,
+    required this.journalReminderMinutes,
     required this.strengthUnit,
     required this.systemColors,
     required this.tabs,
@@ -3899,6 +4549,8 @@ class Setting extends DataClass implements Insertable<Setting> {
     map['show_notes'] = Variable<bool>(showNotes);
     map['show_global_progress'] = Variable<bool>(showGlobalProgress);
     map['show_units'] = Variable<bool>(showUnits);
+    map['journal_reminder'] = Variable<bool>(journalReminder);
+    map['journal_reminder_minutes'] = Variable<int>(journalReminderMinutes);
     map['strength_unit'] = Variable<String>(strengthUnit);
     map['system_colors'] = Variable<bool>(systemColors);
     map['tabs'] = Variable<String>(tabs);
@@ -3961,6 +4613,8 @@ class Setting extends DataClass implements Insertable<Setting> {
       showNotes: Value(showNotes),
       showGlobalProgress: Value(showGlobalProgress),
       showUnits: Value(showUnits),
+      journalReminder: Value(journalReminder),
+      journalReminderMinutes: Value(journalReminderMinutes),
       strengthUnit: Value(strengthUnit),
       systemColors: Value(systemColors),
       tabs: Value(tabs),
@@ -4021,6 +4675,10 @@ class Setting extends DataClass implements Insertable<Setting> {
       showNotes: serializer.fromJson<bool>(json['showNotes']),
       showGlobalProgress: serializer.fromJson<bool>(json['showGlobalProgress']),
       showUnits: serializer.fromJson<bool>(json['showUnits']),
+      journalReminder: serializer.fromJson<bool>(json['journalReminder']),
+      journalReminderMinutes: serializer.fromJson<int>(
+        json['journalReminderMinutes'],
+      ),
       strengthUnit: serializer.fromJson<String>(json['strengthUnit']),
       systemColors: serializer.fromJson<bool>(json['systemColors']),
       tabs: serializer.fromJson<String>(json['tabs']),
@@ -4080,6 +4738,8 @@ class Setting extends DataClass implements Insertable<Setting> {
       'showNotes': serializer.toJson<bool>(showNotes),
       'showGlobalProgress': serializer.toJson<bool>(showGlobalProgress),
       'showUnits': serializer.toJson<bool>(showUnits),
+      'journalReminder': serializer.toJson<bool>(journalReminder),
+      'journalReminderMinutes': serializer.toJson<int>(journalReminderMinutes),
       'strengthUnit': serializer.toJson<String>(strengthUnit),
       'systemColors': serializer.toJson<bool>(systemColors),
       'tabs': serializer.toJson<String>(tabs),
@@ -4131,6 +4791,8 @@ class Setting extends DataClass implements Insertable<Setting> {
     bool? showNotes,
     bool? showGlobalProgress,
     bool? showUnits,
+    bool? journalReminder,
+    int? journalReminderMinutes,
     String? strengthUnit,
     bool? systemColors,
     String? tabs,
@@ -4182,6 +4844,9 @@ class Setting extends DataClass implements Insertable<Setting> {
     showNotes: showNotes ?? this.showNotes,
     showGlobalProgress: showGlobalProgress ?? this.showGlobalProgress,
     showUnits: showUnits ?? this.showUnits,
+    journalReminder: journalReminder ?? this.journalReminder,
+    journalReminderMinutes:
+        journalReminderMinutes ?? this.journalReminderMinutes,
     strengthUnit: strengthUnit ?? this.strengthUnit,
     systemColors: systemColors ?? this.systemColors,
     tabs: tabs ?? this.tabs,
@@ -4276,6 +4941,12 @@ class Setting extends DataClass implements Insertable<Setting> {
           ? data.showGlobalProgress.value
           : this.showGlobalProgress,
       showUnits: data.showUnits.present ? data.showUnits.value : this.showUnits,
+      journalReminder: data.journalReminder.present
+          ? data.journalReminder.value
+          : this.journalReminder,
+      journalReminderMinutes: data.journalReminderMinutes.present
+          ? data.journalReminderMinutes.value
+          : this.journalReminderMinutes,
       strengthUnit: data.strengthUnit.present
           ? data.strengthUnit.value
           : this.strengthUnit,
@@ -4359,6 +5030,8 @@ class Setting extends DataClass implements Insertable<Setting> {
           ..write('showNotes: $showNotes, ')
           ..write('showGlobalProgress: $showGlobalProgress, ')
           ..write('showUnits: $showUnits, ')
+          ..write('journalReminder: $journalReminder, ')
+          ..write('journalReminderMinutes: $journalReminderMinutes, ')
           ..write('strengthUnit: $strengthUnit, ')
           ..write('systemColors: $systemColors, ')
           ..write('tabs: $tabs, ')
@@ -4410,6 +5083,8 @@ class Setting extends DataClass implements Insertable<Setting> {
     showNotes,
     showGlobalProgress,
     showUnits,
+    journalReminder,
+    journalReminderMinutes,
     strengthUnit,
     systemColors,
     tabs,
@@ -4461,6 +5136,8 @@ class Setting extends DataClass implements Insertable<Setting> {
           other.showNotes == this.showNotes &&
           other.showGlobalProgress == this.showGlobalProgress &&
           other.showUnits == this.showUnits &&
+          other.journalReminder == this.journalReminder &&
+          other.journalReminderMinutes == this.journalReminderMinutes &&
           other.strengthUnit == this.strengthUnit &&
           other.systemColors == this.systemColors &&
           other.tabs == this.tabs &&
@@ -4509,6 +5186,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
   final Value<bool> showNotes;
   final Value<bool> showGlobalProgress;
   final Value<bool> showUnits;
+  final Value<bool> journalReminder;
+  final Value<int> journalReminderMinutes;
   final Value<String> strengthUnit;
   final Value<bool> systemColors;
   final Value<String> tabs;
@@ -4555,6 +5234,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
     this.showNotes = const Value.absent(),
     this.showGlobalProgress = const Value.absent(),
     this.showUnits = const Value.absent(),
+    this.journalReminder = const Value.absent(),
+    this.journalReminderMinutes = const Value.absent(),
     this.strengthUnit = const Value.absent(),
     this.systemColors = const Value.absent(),
     this.tabs = const Value.absent(),
@@ -4602,6 +5283,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
     this.showNotes = const Value.absent(),
     this.showGlobalProgress = const Value.absent(),
     required bool showUnits,
+    this.journalReminder = const Value.absent(),
+    this.journalReminderMinutes = const Value.absent(),
     required String strengthUnit,
     required bool systemColors,
     this.tabs = const Value.absent(),
@@ -4664,6 +5347,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
     Expression<bool>? showNotes,
     Expression<bool>? showGlobalProgress,
     Expression<bool>? showUnits,
+    Expression<bool>? journalReminder,
+    Expression<int>? journalReminderMinutes,
     Expression<String>? strengthUnit,
     Expression<bool>? systemColors,
     Expression<String>? tabs,
@@ -4714,6 +5399,9 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
       if (showGlobalProgress != null)
         'show_global_progress': showGlobalProgress,
       if (showUnits != null) 'show_units': showUnits,
+      if (journalReminder != null) 'journal_reminder': journalReminder,
+      if (journalReminderMinutes != null)
+        'journal_reminder_minutes': journalReminderMinutes,
       if (strengthUnit != null) 'strength_unit': strengthUnit,
       if (systemColors != null) 'system_colors': systemColors,
       if (tabs != null) 'tabs': tabs,
@@ -4766,6 +5454,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
     Value<bool>? showNotes,
     Value<bool>? showGlobalProgress,
     Value<bool>? showUnits,
+    Value<bool>? journalReminder,
+    Value<int>? journalReminderMinutes,
     Value<String>? strengthUnit,
     Value<bool>? systemColors,
     Value<String>? tabs,
@@ -4815,6 +5505,9 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
       showNotes: showNotes ?? this.showNotes,
       showGlobalProgress: showGlobalProgress ?? this.showGlobalProgress,
       showUnits: showUnits ?? this.showUnits,
+      journalReminder: journalReminder ?? this.journalReminder,
+      journalReminderMinutes:
+          journalReminderMinutes ?? this.journalReminderMinutes,
       strengthUnit: strengthUnit ?? this.strengthUnit,
       systemColors: systemColors ?? this.systemColors,
       tabs: tabs ?? this.tabs,
@@ -4923,6 +5616,14 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
     if (showUnits.present) {
       map['show_units'] = Variable<bool>(showUnits.value);
     }
+    if (journalReminder.present) {
+      map['journal_reminder'] = Variable<bool>(journalReminder.value);
+    }
+    if (journalReminderMinutes.present) {
+      map['journal_reminder_minutes'] = Variable<int>(
+        journalReminderMinutes.value,
+      );
+    }
     if (strengthUnit.present) {
       map['strength_unit'] = Variable<String>(strengthUnit.value);
     }
@@ -5014,6 +5715,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
           ..write('showNotes: $showNotes, ')
           ..write('showGlobalProgress: $showGlobalProgress, ')
           ..write('showUnits: $showUnits, ')
+          ..write('journalReminder: $journalReminder, ')
+          ..write('journalReminderMinutes: $journalReminderMinutes, ')
           ..write('strengthUnit: $strengthUnit, ')
           ..write('systemColors: $systemColors, ')
           ..write('tabs: $tabs, ')
@@ -5558,6 +6261,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $WorkoutsTable workouts = $WorkoutsTable(this);
   late final $ExerciseSetsTable exerciseSets = $ExerciseSetsTable(this);
   late final $BodyWeightsTable bodyWeights = $BodyWeightsTable(this);
+  late final $DailyLogsTable dailyLogs = $DailyLogsTable(this);
   late final $SettingsTable settings = $SettingsTable(this);
   late final $PlanExercisesTable planExercises = $PlanExercisesTable(this);
   late final Index exercisesCategoryId = Index(
@@ -5588,6 +6292,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'body_weights_timestamp',
     'CREATE INDEX body_weights_timestamp ON body_weights (timestamp DESC, id DESC)',
   );
+  late final Index dailyLogsDate = Index(
+    'daily_logs_date',
+    'CREATE UNIQUE INDEX daily_logs_date ON daily_logs (date)',
+  );
   late final Index planExercisesPlanExercise = Index(
     'plan_exercises_plan_exercise',
     'CREATE UNIQUE INDEX plan_exercises_plan_exercise ON plan_exercises (plan_id, exercise_id)',
@@ -5607,6 +6315,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     workouts,
     exerciseSets,
     bodyWeights,
+    dailyLogs,
     settings,
     planExercises,
     exercisesCategoryId,
@@ -5616,6 +6325,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     exerciseSetsExerciseTimestamp,
     exerciseSetsWorkoutExercise,
     bodyWeightsTimestamp,
+    dailyLogsDate,
     planExercisesPlanExercise,
     planExercisesExerciseId,
   ];
@@ -6919,6 +7629,7 @@ typedef $$WorkoutsTableCreateCompanionBuilder =
       Value<int?> planId,
       required DateTime startedAt,
       Value<DateTime?> endedAt,
+      Value<String?> notes,
     });
 typedef $$WorkoutsTableUpdateCompanionBuilder =
     WorkoutsCompanion Function({
@@ -6926,6 +7637,7 @@ typedef $$WorkoutsTableUpdateCompanionBuilder =
       Value<int?> planId,
       Value<DateTime> startedAt,
       Value<DateTime?> endedAt,
+      Value<String?> notes,
     });
 
 final class $$WorkoutsTableReferences
@@ -6989,6 +7701,11 @@ class $$WorkoutsTableFilterComposer
 
   ColumnFilters<DateTime> get endedAt => $composableBuilder(
     column: $table.endedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7065,6 +7782,11 @@ class $$WorkoutsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$PlansTableOrderingComposer get planId {
     final $$PlansTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -7106,6 +7828,9 @@ class $$WorkoutsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get endedAt =>
       $composableBuilder(column: $table.endedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
 
   $$PlansTableAnnotationComposer get planId {
     final $$PlansTableAnnotationComposer composer = $composerBuilder(
@@ -7188,11 +7913,13 @@ class $$WorkoutsTableTableManager
                 Value<int?> planId = const Value.absent(),
                 Value<DateTime> startedAt = const Value.absent(),
                 Value<DateTime?> endedAt = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
               }) => WorkoutsCompanion(
                 id: id,
                 planId: planId,
                 startedAt: startedAt,
                 endedAt: endedAt,
+                notes: notes,
               ),
           createCompanionCallback:
               ({
@@ -7200,11 +7927,13 @@ class $$WorkoutsTableTableManager
                 Value<int?> planId = const Value.absent(),
                 required DateTime startedAt,
                 Value<DateTime?> endedAt = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
               }) => WorkoutsCompanion.insert(
                 id: id,
                 planId: planId,
                 startedAt: startedAt,
                 endedAt: endedAt,
+                notes: notes,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -7993,6 +8722,281 @@ typedef $$BodyWeightsTableProcessedTableManager =
       BodyWeight,
       PrefetchHooks Function()
     >;
+typedef $$DailyLogsTableCreateCompanionBuilder =
+    DailyLogsCompanion Function({
+      Value<int> id,
+      required DateTime date,
+      Value<int?> kcal,
+      Value<double?> proteinG,
+      Value<double?> fatG,
+      Value<double?> carbsG,
+      Value<double?> sleepHours,
+      Value<int?> wellbeing,
+      Value<String?> notes,
+    });
+typedef $$DailyLogsTableUpdateCompanionBuilder =
+    DailyLogsCompanion Function({
+      Value<int> id,
+      Value<DateTime> date,
+      Value<int?> kcal,
+      Value<double?> proteinG,
+      Value<double?> fatG,
+      Value<double?> carbsG,
+      Value<double?> sleepHours,
+      Value<int?> wellbeing,
+      Value<String?> notes,
+    });
+
+class $$DailyLogsTableFilterComposer
+    extends Composer<_$AppDatabase, $DailyLogsTable> {
+  $$DailyLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get kcal => $composableBuilder(
+    column: $table.kcal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get proteinG => $composableBuilder(
+    column: $table.proteinG,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get fatG => $composableBuilder(
+    column: $table.fatG,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get carbsG => $composableBuilder(
+    column: $table.carbsG,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get sleepHours => $composableBuilder(
+    column: $table.sleepHours,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get wellbeing => $composableBuilder(
+    column: $table.wellbeing,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$DailyLogsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DailyLogsTable> {
+  $$DailyLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get kcal => $composableBuilder(
+    column: $table.kcal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get proteinG => $composableBuilder(
+    column: $table.proteinG,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get fatG => $composableBuilder(
+    column: $table.fatG,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get carbsG => $composableBuilder(
+    column: $table.carbsG,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get sleepHours => $composableBuilder(
+    column: $table.sleepHours,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get wellbeing => $composableBuilder(
+    column: $table.wellbeing,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$DailyLogsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DailyLogsTable> {
+  $$DailyLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<int> get kcal =>
+      $composableBuilder(column: $table.kcal, builder: (column) => column);
+
+  GeneratedColumn<double> get proteinG =>
+      $composableBuilder(column: $table.proteinG, builder: (column) => column);
+
+  GeneratedColumn<double> get fatG =>
+      $composableBuilder(column: $table.fatG, builder: (column) => column);
+
+  GeneratedColumn<double> get carbsG =>
+      $composableBuilder(column: $table.carbsG, builder: (column) => column);
+
+  GeneratedColumn<double> get sleepHours => $composableBuilder(
+    column: $table.sleepHours,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get wellbeing =>
+      $composableBuilder(column: $table.wellbeing, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+}
+
+class $$DailyLogsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DailyLogsTable,
+          DailyLog,
+          $$DailyLogsTableFilterComposer,
+          $$DailyLogsTableOrderingComposer,
+          $$DailyLogsTableAnnotationComposer,
+          $$DailyLogsTableCreateCompanionBuilder,
+          $$DailyLogsTableUpdateCompanionBuilder,
+          (DailyLog, BaseReferences<_$AppDatabase, $DailyLogsTable, DailyLog>),
+          DailyLog,
+          PrefetchHooks Function()
+        > {
+  $$DailyLogsTableTableManager(_$AppDatabase db, $DailyLogsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DailyLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DailyLogsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DailyLogsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+                Value<int?> kcal = const Value.absent(),
+                Value<double?> proteinG = const Value.absent(),
+                Value<double?> fatG = const Value.absent(),
+                Value<double?> carbsG = const Value.absent(),
+                Value<double?> sleepHours = const Value.absent(),
+                Value<int?> wellbeing = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+              }) => DailyLogsCompanion(
+                id: id,
+                date: date,
+                kcal: kcal,
+                proteinG: proteinG,
+                fatG: fatG,
+                carbsG: carbsG,
+                sleepHours: sleepHours,
+                wellbeing: wellbeing,
+                notes: notes,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required DateTime date,
+                Value<int?> kcal = const Value.absent(),
+                Value<double?> proteinG = const Value.absent(),
+                Value<double?> fatG = const Value.absent(),
+                Value<double?> carbsG = const Value.absent(),
+                Value<double?> sleepHours = const Value.absent(),
+                Value<int?> wellbeing = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+              }) => DailyLogsCompanion.insert(
+                id: id,
+                date: date,
+                kcal: kcal,
+                proteinG: proteinG,
+                fatG: fatG,
+                carbsG: carbsG,
+                sleepHours: sleepHours,
+                wellbeing: wellbeing,
+                notes: notes,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$DailyLogsTable, DailyLog>(table),
+                  BaseReferences<_$AppDatabase, $DailyLogsTable, DailyLog>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$DailyLogsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DailyLogsTable,
+      DailyLog,
+      $$DailyLogsTableFilterComposer,
+      $$DailyLogsTableOrderingComposer,
+      $$DailyLogsTableAnnotationComposer,
+      $$DailyLogsTableCreateCompanionBuilder,
+      $$DailyLogsTableUpdateCompanionBuilder,
+      (DailyLog, BaseReferences<_$AppDatabase, $DailyLogsTable, DailyLog>),
+      DailyLog,
+      PrefetchHooks Function()
+    >;
 typedef $$SettingsTableCreateCompanionBuilder =
     SettingsCompanion Function({
       required String alarmSound,
@@ -8022,6 +9026,8 @@ typedef $$SettingsTableCreateCompanionBuilder =
       Value<bool> showNotes,
       Value<bool> showGlobalProgress,
       required bool showUnits,
+      Value<bool> journalReminder,
+      Value<int> journalReminderMinutes,
       required String strengthUnit,
       required bool systemColors,
       Value<String> tabs,
@@ -8070,6 +9076,8 @@ typedef $$SettingsTableUpdateCompanionBuilder =
       Value<bool> showNotes,
       Value<bool> showGlobalProgress,
       Value<bool> showUnits,
+      Value<bool> journalReminder,
+      Value<int> journalReminderMinutes,
       Value<String> strengthUnit,
       Value<bool> systemColors,
       Value<String> tabs,
@@ -8231,6 +9239,16 @@ class $$SettingsTableFilterComposer
 
   ColumnFilters<bool> get showUnits => $composableBuilder(
     column: $table.showUnits,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get journalReminder => $composableBuilder(
+    column: $table.journalReminder,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get journalReminderMinutes => $composableBuilder(
+    column: $table.journalReminderMinutes,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -8470,6 +9488,16 @@ class $$SettingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get journalReminder => $composableBuilder(
+    column: $table.journalReminder,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get journalReminderMinutes => $composableBuilder(
+    column: $table.journalReminderMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get strengthUnit => $composableBuilder(
     column: $table.strengthUnit,
     builder: (column) => ColumnOrderings(column),
@@ -8696,6 +9724,16 @@ class $$SettingsTableAnnotationComposer
   GeneratedColumn<bool> get showUnits =>
       $composableBuilder(column: $table.showUnits, builder: (column) => column);
 
+  GeneratedColumn<bool> get journalReminder => $composableBuilder(
+    column: $table.journalReminder,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get journalReminderMinutes => $composableBuilder(
+    column: $table.journalReminderMinutes,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get strengthUnit => $composableBuilder(
     column: $table.strengthUnit,
     builder: (column) => column,
@@ -8837,6 +9875,8 @@ class $$SettingsTableTableManager
                 Value<bool> showNotes = const Value.absent(),
                 Value<bool> showGlobalProgress = const Value.absent(),
                 Value<bool> showUnits = const Value.absent(),
+                Value<bool> journalReminder = const Value.absent(),
+                Value<int> journalReminderMinutes = const Value.absent(),
                 Value<String> strengthUnit = const Value.absent(),
                 Value<bool> systemColors = const Value.absent(),
                 Value<String> tabs = const Value.absent(),
@@ -8884,6 +9924,8 @@ class $$SettingsTableTableManager
                 showNotes: showNotes,
                 showGlobalProgress: showGlobalProgress,
                 showUnits: showUnits,
+                journalReminder: journalReminder,
+                journalReminderMinutes: journalReminderMinutes,
                 strengthUnit: strengthUnit,
                 systemColors: systemColors,
                 tabs: tabs,
@@ -8933,6 +9975,8 @@ class $$SettingsTableTableManager
                 Value<bool> showNotes = const Value.absent(),
                 Value<bool> showGlobalProgress = const Value.absent(),
                 required bool showUnits,
+                Value<bool> journalReminder = const Value.absent(),
+                Value<int> journalReminderMinutes = const Value.absent(),
                 required String strengthUnit,
                 required bool systemColors,
                 Value<String> tabs = const Value.absent(),
@@ -8980,6 +10024,8 @@ class $$SettingsTableTableManager
                 showNotes: showNotes,
                 showGlobalProgress: showGlobalProgress,
                 showUnits: showUnits,
+                journalReminder: journalReminder,
+                journalReminderMinutes: journalReminderMinutes,
                 strengthUnit: strengthUnit,
                 systemColors: systemColors,
                 tabs: tabs,
@@ -9506,6 +10552,8 @@ class $AppDatabaseManager {
       $$ExerciseSetsTableTableManager(_db, _db.exerciseSets);
   $$BodyWeightsTableTableManager get bodyWeights =>
       $$BodyWeightsTableTableManager(_db, _db.bodyWeights);
+  $$DailyLogsTableTableManager get dailyLogs =>
+      $$DailyLogsTableTableManager(_db, _db.dailyLogs);
   $$SettingsTableTableManager get settings =>
       $$SettingsTableTableManager(_db, _db.settings);
   $$PlanExercisesTableTableManager get planExercises =>

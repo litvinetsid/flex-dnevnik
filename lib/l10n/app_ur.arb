@@ -1,6 +1,8 @@
 {
   "showUpdateNotices": "اپ ڈیٹ کی اطلاعات دکھائیں",
-  "@showUpdateNotices": {"description": "Whether to show update notices after upgrading the app."},
+  "@showUpdateNotices": {
+    "description": "Whether to show update notices after upgrading the app."
+  },
   "@@locale": "ur",
   "appTitle": "Flex",
   "@appTitle": {
@@ -2007,5 +2009,42 @@
       }
     }
   },
-  "previousPerformance": "پہلے {date} · {sets}"
+  "previousPerformance": "پہلے {date} · {sets}",
+  "kcalLabel": "Calories (kcal)",
+  "proteinLabel": "Protein (g)",
+  "fatLabel": "Fat (g)",
+  "carbsLabel": "Carbs (g)",
+  "kcalValue": "{value} kcal",
+  "macrosShort": "P {protein} · F {fat} · C {carbs}",
+  "exportWorkoutAnalysis": "Workouts for analysis (CSV)",
+  "exportDailyAnalysis": "Daily journal for analysis (CSV)",
+  "navJournal": "Journal",
+  "addJournalDay": "Add day",
+  "editJournalDay": "Edit day",
+  "journalDate": "Date",
+  "journalBodySection": "Body",
+  "journalNutritionSection": "Nutrition",
+  "bodyWeightKgLabel": "Weight (kg)",
+  "sleepHoursLabel": "Sleep (h)",
+  "wellbeingLabel": "How do you feel?",
+  "journalNotesHint": "How was the day? Anything that may affect training.",
+  "journalEmptyTitle": "Your journal is empty",
+  "journalEmptyMessage": "Record weight, sleep, wellbeing and calories each day to see how they affect training.",
+  "journalAverage7Days": "Last 7 days",
+  "kcalShort": "kcal",
+  "sleepShort": "sleep, h",
+  "weightShort": "weight, kg",
+  "wellbeingShort": "wellbeing",
+  "weightKgValue": "{value} kg",
+  "sleepHoursValue": "{value} h sleep",
+  "workoutComment": "Workout comment",
+  "workoutCommentHint": "e.g. slept badly, got tired quickly",
+  "journalReminder": "Journal reminder",
+  "journalReminderDaily": "Remind me every day",
+  "journalReminderTime": "Time",
+  "journalReminderTitle": "Fill in your journal",
+  "journalReminderBody": "Weight, sleep, wellbeing and calories for today.",
+  "journalReminderChannel": "Journal reminders",
+  "journalReminderChannelDescription": "Daily reminder to fill in the journal.",
+  "journalReminderNoPermission": "Allow notifications to get reminders."
 }

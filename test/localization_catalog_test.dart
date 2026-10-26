@@ -40,6 +40,47 @@ const _allowedLiteralUiText = <String>{
   'lib/about_page.dart:MIT',
 };
 
+// Journal and analysis export strings are only translated into Russian.
+const _russianOnlyKeys = <String>{
+  'navJournal',
+  'addJournalDay',
+  'editJournalDay',
+  'journalDate',
+  'journalBodySection',
+  'journalNutritionSection',
+  'bodyWeightKgLabel',
+  'sleepHoursLabel',
+  'wellbeingLabel',
+  'kcalLabel',
+  'proteinLabel',
+  'fatLabel',
+  'carbsLabel',
+  'journalNotesHint',
+  'journalEmptyTitle',
+  'journalEmptyMessage',
+  'journalAverage7Days',
+  'kcalShort',
+  'sleepShort',
+  'weightShort',
+  'wellbeingShort',
+  'kcalValue',
+  'weightKgValue',
+  'sleepHoursValue',
+  'macrosShort',
+  'workoutComment',
+  'workoutCommentHint',
+  'exportWorkoutAnalysis',
+  'exportDailyAnalysis',
+  'journalReminder',
+  'journalReminderDaily',
+  'journalReminderTime',
+  'journalReminderTitle',
+  'journalReminderBody',
+  'journalReminderChannel',
+  'journalReminderChannelDescription',
+  'journalReminderNoPermission',
+};
+
 const _alwaysEnglishEquivalentKeys = <String>{
   'appTitle',
   'languageNameEnglish',
@@ -349,6 +390,7 @@ void main() {
       final allowedEnglishEquivalentKeys = <String>{
         ..._alwaysEnglishEquivalentKeys,
         ...?_localeSpecificEnglishEquivalentKeys[locale],
+        if (locale != 'ru') ..._russianOnlyKeys,
       };
       final accidentalEnglishKeys =
           sourceKeys
@@ -654,7 +696,7 @@ void main() {
 
   test('Flutter UI avoids obvious hard-coded English literals', () {
     final violations = <String>[];
-    String normalize(String path) => path.replaceAll(r'\\', '/');
+    String normalize(String path) => path.replaceAll(r'\', '/');
     final dartFiles = Directory('lib')
         .listSync(recursive: true)
         .whereType<File>()

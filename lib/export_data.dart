@@ -4,6 +4,7 @@ import 'package:csv/csv.dart';
 
 import 'package:drift/drift.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flex/data_portability/analysis_csv.dart';
 import 'package:flex/data_portability/graph_csv.dart';
 import 'package:flex/l10n/l10n.dart';
 import 'package:flex/main.dart';
@@ -14,6 +15,16 @@ import 'package:flex/utils.dart';
 import 'package:flex/storage/app_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+
+/// Saves [csv] as UTF-8 with a BOM so spreadsheet apps detect Cyrillic text.
+Future<void> _saveCsv(String fileName, String csv) {
+  return FilePicker.saveFile(
+    fileName: fileName,
+    bytes: Uint8List.fromList([0xEF, 0xBB, 0xBF, ...utf8.encode(csv)]),
+    type: FileType.custom,
+    allowedExtensions: ['csv'],
+  );
+}
 
 class ExportData extends StatefulWidget {
   const ExportData({super.key});
@@ -52,6 +63,32 @@ class _ExportDataState extends State<ExportData> {
                     },
                   ),
                   ListTile(
+                    leading: const Icon(Icons.table_chart_outlined),
+                    title: Text(context.l10n.exportWorkoutAnalysis),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      if (!await requestNotificationPermission()) return;
+                      await _saveCsv(
+                        'flex-workouts.csv',
+                        await exportWorkoutAnalysisCsv(db),
+                      );
+                      talker.info('Exported workout analysis CSV');
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.restaurant_outlined),
+                    title: Text(context.l10n.exportDailyAnalysis),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      if (!await requestNotificationPermission()) return;
+                      await _saveCsv(
+                        'flex-daily.csv',
+                        await exportDailyAnalysisCsv(db),
+                      );
+                      talker.info('Exported daily nutrition CSV');
+                    },
+                  ),
+                  ListTile(
                     leading: const Icon(Icons.event),
                     title: Text(context.l10n.navPlans),
                     onTap: () async {
@@ -77,7 +114,7 @@ class _ExportDataState extends State<ExportData> {
                       if (!await requestNotificationPermission()) return;
 
                       final csv = CsvEncoder(lineDelimiter: "\n").convert(data);
-                      final bytes = Uint8List.fromList(csv.codeUnits);
+                      final bytes = Uint8List.fromList(utf8.encode(csv));
                       await FilePicker.saveFile(
                         fileName: 'plans.csv',
                         bytes: bytes,
