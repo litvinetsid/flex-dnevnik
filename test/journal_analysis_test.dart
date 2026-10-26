@@ -152,4 +152,12 @@ void main() {
     );
     expect(late, [(1, DateTime(2026, 10, 27, 23))]);
   });
+
+  test('CSV text that looks like a formula is neutralised', () {
+    expect(safeCsvText('=HYPERLINK("x")'), "'=HYPERLINK(\"x\")");
+    expect(safeCsvText('-5 кг'), "'-5 кг");
+    expect(safeCsvText('@sum'), "'@sum");
+    expect(safeCsvText('Не выспался'), 'Не выспался');
+    expect(safeCsvText(null), isNull);
+  });
 }

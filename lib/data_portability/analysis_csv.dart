@@ -9,6 +9,12 @@ import 'package:intl/intl.dart';
 final _date = DateFormat('yyyy-MM-dd');
 final _time = DateFormat('HH:mm:ss');
 
+/// Stops spreadsheet apps from running free text as a formula.
+String? safeCsvText(String? value) {
+  if (value == null || value.isEmpty) return value;
+  return '=+-@\t\r'.contains(value[0]) ? "'$value" : value;
+}
+
 String _encode(List<List<Object?>> rows) =>
     CsvEncoder(lineDelimiter: '\n').convert(rows);
 
@@ -105,10 +111,12 @@ Future<String> exportWorkoutAnalysisCsv(AppDatabase database) async {
       day,
       _time.format(timestamp),
       workoutId,
-      row.readNullable<String>('plan_title') ??
-          row.readNullable<String>('plan_days'),
-      exercise,
-      row.readNullable<String>('category'),
+      safeCsvText(
+        row.readNullable<String>('plan_title') ??
+            row.readNullable<String>('plan_days'),
+      ),
+      safeCsvText(exercise),
+      safeCsvText(row.readNullable<String>('category')),
       row.read<String>('kind'),
       setNumber,
       reps,
@@ -119,8 +127,8 @@ Future<String> exportWorkoutAnalysisCsv(AppDatabase database) async {
       distance == null ? null : _round(distance / 1000, 3),
       row.readNullable<double>('incline'),
       _round(row.readNullable<double>('body_weight_kg')),
-      row.readNullable<String>('notes'),
-      row.readNullable<String>('workout_notes'),
+      safeCsvText(row.readNullable<String>('notes')),
+      safeCsvText(row.readNullable<String>('workout_notes')),
     ]);
   }
 
@@ -206,8 +214,10 @@ Future<String> exportDailyAnalysisCsv(AppDatabase database) async {
       day.workoutIds.length,
       day.sets,
       _round(day.volumeKg),
-      day.log?.notes,
-      day.workoutNotes.isEmpty ? null : day.workoutNotes.join(' | '),
+      safeCsvText(day.log?.notes),
+      safeCsvText(
+        day.workoutNotes.isEmpty ? null : day.workoutNotes.join(' | '),
+      ),
     ]);
   }
 
